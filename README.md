@@ -5,6 +5,7 @@ A beginner-friendly MVP: enter a research topic, search public webpages, read pa
 ## Current MVP Features
 
 - Accept a research topic from the command line
+- Create a structured execution plan before running the task
 - Search a configurable number of public webpages
 - Fetch readable webpage text
 - Use DeepSeek to generate a Markdown research report when an API key is configured
@@ -74,6 +75,27 @@ python src/main.py --max-results 3
 
 After the command finishes, check the generated `.md` report in the `reports/` folder.
 
+## Planning Module
+
+The agent now plans before executing. The flow is:
+
+```text
+user task -> planner -> task plan -> executor -> tools -> observations -> final report
+```
+
+Run the planner demo:
+
+```bash
+python scripts/demo_planner.py
+```
+
+The demo will:
+
+- print the generated task plan
+- run each step through the tool registry
+- show each step status
+- save the final Markdown report in `reports/`
+
 ## Project Structure
 
 ```text
@@ -81,9 +103,19 @@ browser_agent/
 ├── README.md
 ├── requirements.txt
 ├── .env.example
+├── prompts/
+│   └── planner_prompt.txt
 ├── reports/
 │   └── .gitkeep
+├── scripts/
+│   └── demo_planner.py
 └── src/
+    ├── agents/
+    │   ├── executor.py
+    │   ├── models.py
+    │   └── planner.py
+    ├── tools/
+    │   └── registry.py
     ├── main.py
     ├── search.py
     ├── fetcher.py
@@ -94,8 +126,11 @@ browser_agent/
 
 ## Possible Next Steps
 
+- Add ReAct-style plan/act/observe loops
+- Add memory for reusable user preferences and previous research
+- Add multi-step retry and fallback tools
+- Add human approval before risky or expensive actions
 - Add webpage content deduplication
 - Improve source filtering and ranking
-- Add webpage content deduplication
 - Add tests for the report generation logic
 - Build a simple web UI
