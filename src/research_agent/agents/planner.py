@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from agents.models import PlanStep, TaskPlan
-from deepseek_client import chat_json, is_deepseek_configured
+from research_agent.agents.models import PlanStep, TaskPlan
+from research_agent.llm import chat_json, is_deepseek_configured
 
 
-PROMPT_PATH = Path(__file__).resolve().parents[2] / "prompts" / "planner_prompt.txt"
+PROMPT_PATH = Path(__file__).resolve().parents[3] / "prompts" / "planner_prompt.txt"
 
 
 def create_plan(user_task: str) -> TaskPlan:

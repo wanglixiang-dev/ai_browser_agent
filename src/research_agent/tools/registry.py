@@ -1,9 +1,9 @@
 from typing import Any, Callable
 
-from deepseek_client import chat_text, generate_final_report_from_observations, is_deepseek_configured
-from fetcher import fetch_page_text
-from reporter import save_ai_report
-from search import search_web
+from research_agent.browser import fetch_page_text
+from research_agent.llm import chat_text, generate_final_report_from_observations, is_deepseek_configured
+from research_agent.reports import save_ai_report
+from research_agent.search import search_web
 
 
 ToolFunction = Callable[[Any, dict], Any]

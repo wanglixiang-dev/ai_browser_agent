@@ -55,6 +55,12 @@ Start the program and enter your research topic when prompted:
 python src/main.py
 ```
 
+You can also run the package entry point:
+
+```bash
+PYTHONPATH=src python -m research_agent
+```
+
 Example prompt:
 
 ```text
@@ -110,18 +116,20 @@ browser_agent/
 ├── scripts/
 │   └── demo_planner.py
 └── src/
-    ├── agents/
-    │   ├── executor.py
-    │   ├── models.py
-    │   └── planner.py
-    ├── tools/
-    │   └── registry.py
     ├── main.py
-    ├── search.py
-    ├── fetcher.py
-    ├── extractor.py
-    ├── deepseek_client.py
-    └── reporter.py
+    └── research_agent/
+        ├── cli.py
+        ├── browser.py
+        ├── search.py
+        ├── llm.py
+        ├── reports.py
+        ├── extract.py
+        ├── agents/
+        │   ├── executor.py
+        │   ├── models.py
+        │   └── planner.py
+        └── tools/
+            └── registry.py
 ```
 
 ## Possible Next Steps

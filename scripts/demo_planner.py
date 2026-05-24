@@ -6,8 +6,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from agents.executor import execute_plan
-from agents.planner import create_plan
+from research_agent.agents.executor import execute_plan
+from research_agent.agents.planner import create_plan
 
 
 DEMO_TASK = "Open a webpage, summarize the main content, and generate a Markdown report."

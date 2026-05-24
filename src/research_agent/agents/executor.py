@@ -1,5 +1,5 @@
-from agents.models import ExecutionResult, TaskPlan
-from tools.registry import get_tool
+from research_agent.agents.models import ExecutionResult, TaskPlan
+from research_agent.tools.registry import get_tool
 
 
 def execute_plan(plan: TaskPlan, max_results: int = 3) -> ExecutionResult:
