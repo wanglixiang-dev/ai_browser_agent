@@ -55,7 +55,7 @@ def build_prompt(topic: str, pages: list[dict]) -> str:
         source_blocks.append(
             "\n".join(
                 [
-                    f"Source {index}",
+                    f"Source [{index}]",
                     f"Title: {page['title']}",
                     f"URL: {page['url']}",
                     "Text excerpt:",
@@ -77,7 +77,8 @@ def build_prompt(topic: str, pages: list[dict]) -> str:
             "6. Follow-up Research Questions",
             "Requirements:",
             "- Make the key findings specific and concrete.",
-            "- List each source with its title and URL.",
+            "- Use citation markers like [1] and [2] after factual claims.",
+            "- List each source with its citation number, title, and URL.",
             "- Clearly state uncertainty when the provided material is insufficient.",
             "",
             "Webpage material:",

@@ -42,14 +42,15 @@ def build_markdown(topic: str, pages: list[dict]) -> str:
         key_points.extend(page.get("key_points", []))
 
     if key_points:
-        for point in key_points[:10]:
-            lines.append(f"- {point}")
+        for index, page in enumerate(pages, start=1):
+            for point in page.get("key_points", [])[:3]:
+                lines.append(f"- {point} [{index}]")
     else:
         lines.append("- No clear key findings were extracted.")
 
     lines.extend(["", "## Sources", ""])
     for index, page in enumerate(pages, start=1):
-        lines.append(f"{index}. [{page['title']}]({page['url']})")
+        lines.append(f"[{index}] [{page['title']}]({page['url']})")
 
     lines.extend(["", "## Webpage Summaries", ""])
     for index, page in enumerate(pages, start=1):
@@ -57,7 +58,7 @@ def build_markdown(topic: str, pages: list[dict]) -> str:
             [
                 f"### {index}. {page['title']}",
                 "",
-                f"Source: {page['url']}",
+                f"Source [{index}]: {page['url']}",
                 "",
                 page.get("summary") or "No summary was generated.",
                 "",

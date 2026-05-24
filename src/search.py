@@ -30,8 +30,7 @@ def search_web(query: str, max_results: int = 5) -> list[dict]:
         if not title or not href:
             continue
 
-        parsed = urlparse(href)
-        if parsed.scheme not in {"http", "https"}:
+        if not is_public_webpage_url(href):
             continue
 
         results.append({"title": title, "url": href})
@@ -53,4 +52,19 @@ def normalize_url(href: str | None) -> str | None:
     if "uddg" in query:
         return unquote(query["uddg"][0])
 
+    if parsed.netloc.endswith("duckduckgo.com"):
+        return None
+
     return absolute_url
+
+
+def is_public_webpage_url(url: str) -> bool:
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"}:
+        return False
+
+    blocked_domains = {"duckduckgo.com", "www.duckduckgo.com"}
+    if parsed.netloc in blocked_domains or parsed.netloc.endswith(".duckduckgo.com"):
+        return False
+
+    return True

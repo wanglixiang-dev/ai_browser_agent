@@ -1,4 +1,4 @@
-import sys
+import argparse
 
 from deepseek_client import generate_ai_report, is_deepseek_configured
 from extractor import extract_key_points, summarize_text
@@ -8,12 +8,14 @@ from search import search_web
 
 
 def main() -> None:
-    topic = parse_topic()
+    args = parse_args()
+    topic = args.topic
     print(f"Research topic: {topic}")
+    print(f"Max search results: {args.max_results}")
 
     print("1. Searching webpages...")
     try:
-        search_results = search_web(topic, max_results=5)
+        search_results = search_web(topic, max_results=args.max_results)
     except Exception as error:
         print(f"Search failed: {error}")
         print("Please check your network connection or try again later.")
@@ -68,12 +70,24 @@ def main() -> None:
     print(f"Done: {report_path}")
 
 
-def parse_topic() -> str:
-    if len(sys.argv) < 2:
-        print('Usage: python src/main.py "research Apple\'s AI strategy"')
-        raise SystemExit(1)
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Search public webpages and generate a Markdown research report."
+    )
+    parser.add_argument("topic", help="Research topic, for example: research Apple's AI strategy")
+    parser.add_argument(
+        "--max-results",
+        type=int,
+        default=5,
+        help="Maximum number of search results to fetch. Default: 5. Range: 1-10.",
+    )
 
-    return " ".join(sys.argv[1:]).strip()
+    args = parser.parse_args()
+
+    if args.max_results < 1 or args.max_results > 10:
+        parser.error("--max-results must be between 1 and 10.")
+
+    return args
 
 
 if __name__ == "__main__":

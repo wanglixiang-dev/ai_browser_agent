@@ -5,10 +5,11 @@ A beginner-friendly MVP: enter a research topic, search public webpages, read pa
 ## Current MVP Features
 
 - Accept a research topic from the command line
-- Search 3-5 public webpages
+- Search a configurable number of public webpages
 - Fetch readable webpage text
 - Use DeepSeek to generate a Markdown research report when an API key is configured
 - Fall back to a simple rule-based report when no DeepSeek API key is configured
+- Add numbered citations for sources
 - Save generated reports to `reports/`
 
 ## Safety Boundaries
@@ -51,6 +52,12 @@ DEEPSEEK_MODEL=deepseek-v4-flash
 python src/main.py "research Apple's AI strategy"
 ```
 
+You can also control how many search results are fetched:
+
+```bash
+python src/main.py "research Apple's AI strategy" --max-results 3
+```
+
 After the command finishes, check the generated `.md` report in the `reports/` folder.
 
 ## Project Structure
@@ -74,7 +81,7 @@ browser_agent/
 ## Possible Next Steps
 
 - Add webpage content deduplication
-- Add numbered citations
-- Support a configurable search result count
-- Support more search results
+- Improve source filtering and ranking
+- Add webpage content deduplication
+- Add tests for the report generation logic
 - Build a simple web UI
