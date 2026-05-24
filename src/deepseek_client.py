@@ -81,35 +81,9 @@ def generate_final_report_from_observations(task: str, observations: list[dict])
     return chat_text(
         system_prompt=(
             "You write clear Markdown reports from agent observations. "
-            "Use only the provided observations. Do not invent facts. "
-            "For resume tasks, do not claim experience, tools, degrees, employers, or metrics "
-            "that are not present in the resume context. Label missing items as recommendations."
+            "Use only the provided observations. Do not invent facts."
         ),
         user_prompt=f"Task: {task}\n\nObservations:\n{observation_text[:16000]}",
-        max_tokens=1800,
-    )
-
-
-def generate_resume_draft(task: str, resume_text: str, observations: list[dict]) -> str:
-    observation_text = "\n\n".join(
-        [
-            f"Step {item['step_id']} - {item['goal']} ({item['tool']}):\n{item['observation']}"
-            for item in observations
-        ]
-    )
-    return chat_text(
-        system_prompt=(
-            "You rewrite resumes in Markdown. Preserve truthfulness. "
-            "Only include skills, tools, projects, education, and experience that appear in the original resume. "
-            "Do not invent employers, degrees, metrics, tools, or achievements. "
-            "If a useful skill is missing, put it in a section named 'Recommended Additions After Gaining Experience'."
-        ),
-        user_prompt=(
-            f"Task: {task}\n\n"
-            f"Original resume:\n{resume_text[:8000]}\n\n"
-            f"Agent observations and job analysis:\n{observation_text[:12000]}\n\n"
-            "Return only the rewritten Markdown resume."
-        ),
         max_tokens=1800,
     )
 

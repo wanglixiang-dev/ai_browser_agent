@@ -73,26 +73,6 @@ Control how many search results are fetched:
 python src/main.py --max-results 3
 ```
 
-Use a local resume file as context:
-
-```bash
-python src/main.py "Analyze this job page and tell me how to improve my resume: https://example.com/job" --resume-file examples/sample_resume.md
-```
-
-Generate a rewritten resume draft without overwriting the original file:
-
-```bash
-python src/main.py "Find a Python web scraping job description and improve my resume" --resume-file examples/sample_resume.md --resume-output reports/resume_draft.md --max-results 1
-```
-
-Supported resume formats:
-
-- `.md`
-- `.markdown`
-- `.txt`
-
-The agent does not overwrite your original resume. It uses the resume as context, writes improvement suggestions into the final Markdown report, and only writes a new resume draft when `--resume-output` is provided.
-
 After the command finishes, check the generated `.md` report in the `reports/` folder.
 
 ## Planning Module
@@ -125,8 +105,6 @@ browser_agent/
 ├── .env.example
 ├── prompts/
 │   └── planner_prompt.txt
-├── examples/
-│   └── sample_resume.md
 ├── reports/
 │   └── .gitkeep
 ├── scripts/
@@ -142,7 +120,6 @@ browser_agent/
     ├── search.py
     ├── fetcher.py
     ├── extractor.py
-    ├── resume.py
     ├── deepseek_client.py
     └── reporter.py
 ```
