@@ -1,11 +1,13 @@
 import argparse
 import json
+import sys
 
 from research_agent.agents.executor import execute_plan
 from research_agent.agents.planner import create_plan
 
 
 def main() -> None:
+    enable_line_buffering()
     args = parse_args()
     topic = args.topic
     print(f"User task: {topic}")
@@ -58,3 +60,8 @@ def parse_args() -> argparse.Namespace:
         parser.error("research topic cannot be empty.")
 
     return args
+
+
+def enable_line_buffering() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)

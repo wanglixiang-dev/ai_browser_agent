@@ -7,6 +7,7 @@ from openai import OpenAI
 
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 DEFAULT_MODEL = "deepseek-v4-flash"
+DEFAULT_TIMEOUT = 20.0
 
 
 def is_deepseek_configured() -> bool:
@@ -22,7 +23,7 @@ def generate_ai_report(topic: str, pages: list[dict]) -> str:
     if not api_key:
         raise RuntimeError("DEEPSEEK_API_KEY is missing. Please configure it in .env first.")
 
-    client = OpenAI(api_key=api_key, base_url=DEEPSEEK_BASE_URL)
+    client = build_client()
     model = os.getenv("DEEPSEEK_MODEL", DEFAULT_MODEL)
 
     response = client.chat.completions.create(
@@ -95,7 +96,13 @@ def build_client() -> OpenAI:
     if not api_key:
         raise RuntimeError("DEEPSEEK_API_KEY is missing. Please configure it in .env first.")
 
-    return OpenAI(api_key=api_key, base_url=DEEPSEEK_BASE_URL)
+    timeout = float(os.getenv("DEEPSEEK_TIMEOUT", DEFAULT_TIMEOUT))
+    return OpenAI(
+        api_key=api_key,
+        base_url=DEEPSEEK_BASE_URL,
+        timeout=timeout,
+        max_retries=0,
+    )
 
 
 def strip_json_fence(content: str) -> str:

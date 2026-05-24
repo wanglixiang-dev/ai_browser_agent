@@ -25,6 +25,7 @@ def llm_extract_tool(tool_input: Any, context: dict) -> str | dict:
     if not is_deepseek_configured():
         return content[:1200]
 
+    print("Calling LLM extractor...")
     return chat_text(
         system_prompt="Extract structured information from the provided material. Be concise.",
         user_prompt=f"Task: {context['task']}\n\nMaterial:\n{content[:12000]}",
@@ -37,6 +38,7 @@ def llm_analyze_tool(tool_input: Any, context: dict) -> str:
     if not is_deepseek_configured():
         return f"Rule-based analysis fallback:\n\n{content[:1200]}"
 
+    print("Calling LLM analyzer...")
     return chat_text(
         system_prompt="Analyze the provided information for the user's task. Be practical and specific.",
         user_prompt=f"Task: {context['task']}\n\nInformation:\n{content[:12000]}",
@@ -46,6 +48,7 @@ def llm_analyze_tool(tool_input: Any, context: dict) -> str:
 
 def report_write_tool(tool_input: Any, context: dict) -> str:
     if is_deepseek_configured():
+        print("Calling LLM report writer...")
         markdown = generate_final_report_from_observations(context["task"], context["observations"])
     else:
         markdown = build_fallback_report(context["task"], context["observations"])

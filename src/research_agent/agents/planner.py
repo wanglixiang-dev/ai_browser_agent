@@ -14,6 +14,7 @@ def create_plan(user_task: str) -> TaskPlan:
 
     prompt = PROMPT_PATH.read_text(encoding="utf-8")
     try:
+        print("Calling LLM planner...")
         data = chat_json(
             system_prompt=prompt,
             user_prompt=f"User task: {user_task}",
@@ -21,7 +22,8 @@ def create_plan(user_task: str) -> TaskPlan:
         )
         plan = TaskPlan.model_validate(data)
         return normalize_plan(plan, user_task)
-    except Exception:
+    except Exception as error:
+        print(f"Planner LLM failed, using fallback plan: {error}")
         return create_fallback_plan(user_task)
 
 

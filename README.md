@@ -43,6 +43,7 @@ Then open `.env` and add your own DeepSeek API key:
 ```text
 DEEPSEEK_API_KEY=your_deepseek_api_key_here
 DEEPSEEK_MODEL=deepseek-v4-flash
+DEEPSEEK_TIMEOUT=20
 ```
 
 `deepseek-v4-flash` is a good default for the beginner stage because it is faster and cheaper. For stronger output quality, change it to `deepseek-v4-pro`.
@@ -80,6 +81,18 @@ python src/main.py --max-results 3
 ```
 
 After the command finishes, check the generated `.md` report in the `reports/` folder.
+
+## Troubleshooting
+
+If the program appears to pause, check the latest printed line:
+
+- `Calling LLM planner...`: waiting for DeepSeek to create the task plan
+- `Calling LLM extractor...`: waiting for DeepSeek to extract page information
+- `Calling LLM analyzer...`: waiting for DeepSeek to analyze observations
+- `Running step 1: ... (search.web)`: waiting for the search engine response
+- `Running step 2: ... (browser.open)`: waiting for the webpage response
+
+DeepSeek requests use `DEEPSEEK_TIMEOUT`, which defaults to 20 seconds. If the API is slow or unstable, the agent will show a timeout error instead of waiting forever.
 
 ## Planning Module
 
