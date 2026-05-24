@@ -74,7 +74,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Search public webpages and generate a Markdown research report."
     )
-    parser.add_argument("topic", help="Research topic, for example: research Apple's AI strategy")
+    parser.add_argument(
+        "topic",
+        nargs="?",
+        help="Optional research topic. If omitted, the program will ask for it.",
+    )
     parser.add_argument(
         "--max-results",
         type=int,
@@ -86,6 +90,12 @@ def parse_args() -> argparse.Namespace:
 
     if args.max_results < 1 or args.max_results > 10:
         parser.error("--max-results must be between 1 and 10.")
+
+    if not args.topic:
+        args.topic = input("Enter research topic: ").strip()
+
+    if not args.topic:
+        parser.error("research topic cannot be empty.")
 
     return args
 

@@ -48,14 +48,28 @@ DEEPSEEK_MODEL=deepseek-v4-flash
 
 ## Run
 
+Start the program and enter your research topic when prompted:
+
 ```bash
-python src/main.py "research Apple's AI strategy"
+python src/main.py
 ```
 
-You can also control how many search results are fetched:
+Example prompt:
+
+```text
+Enter research topic: research AI browsers
+```
+
+You can also pass the topic directly:
 
 ```bash
-python src/main.py "research Apple's AI strategy" --max-results 3
+python src/main.py "research AI browser agents"
+```
+
+Control how many search results are fetched:
+
+```bash
+python src/main.py --max-results 3
 ```
 
 After the command finishes, check the generated `.md` report in the `reports/` folder.

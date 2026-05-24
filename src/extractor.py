@@ -22,7 +22,6 @@ def extract_key_points(text: str, max_points: int = 5) -> list[str]:
         "strategy",
         "model",
         "openai",
-        "apple intelligence",
         "investment",
         "product",
         "privacy",
