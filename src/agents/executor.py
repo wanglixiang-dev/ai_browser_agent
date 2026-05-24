@@ -1,10 +1,23 @@
 from agents.models import ExecutionResult, TaskPlan
+from resume import read_resume_file
 from tools.registry import get_tool
 
 
-def execute_plan(plan: TaskPlan, max_results: int = 3) -> ExecutionResult:
+def execute_plan(
+    plan: TaskPlan,
+    max_results: int = 3,
+    resume_file: str | None = None,
+    resume_output: str | None = None,
+) -> ExecutionResult:
     """Run plan steps one by one and store each observation or error."""
     context = {"task": plan.task, "observations": [], "max_results": max_results}
+
+    if resume_file:
+        context["resume_file"] = resume_file
+        context["resume_text"] = read_resume_file(resume_file)
+
+    if resume_output:
+        context["resume_output"] = resume_output
 
     for step in plan.steps:
         step.status = "running"

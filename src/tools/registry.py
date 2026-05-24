@@ -1,6 +1,12 @@
 from typing import Any, Callable
+from pathlib import Path
 
-from deepseek_client import chat_text, generate_final_report_from_observations, is_deepseek_configured
+from deepseek_client import (
+    chat_text,
+    generate_final_report_from_observations,
+    generate_resume_draft,
+    is_deepseek_configured,
+)
 from fetcher import fetch_page_text
 from reporter import save_ai_report
 from search import search_web
@@ -22,37 +28,61 @@ def browser_open_tool(tool_input: Any, context: dict) -> dict:
 
 def llm_extract_tool(tool_input: Any, context: dict) -> str | dict:
     content = stringify(tool_input)
+    resume_context = build_resume_context(context)
     if not is_deepseek_configured():
-        return content[:1200]
+        return (content + resume_context)[:1200]
 
     return chat_text(
         system_prompt="Extract structured information from the provided material. Be concise.",
-        user_prompt=f"Task: {context['task']}\n\nMaterial:\n{content[:12000]}",
+        user_prompt=f"Task: {context['task']}\n\nMaterial:\n{content[:12000]}{resume_context}",
         max_tokens=1000,
     )
 
 
 def llm_analyze_tool(tool_input: Any, context: dict) -> str:
     content = stringify(tool_input)
+    resume_context = build_resume_context(context)
     if not is_deepseek_configured():
-        return f"Rule-based analysis fallback:\n\n{content[:1200]}"
+        return f"Rule-based analysis fallback:\n\n{(content + resume_context)[:1200]}"
 
     return chat_text(
-        system_prompt="Analyze the provided information for the user's task. Be practical and specific.",
-        user_prompt=f"Task: {context['task']}\n\nInformation:\n{content[:12000]}",
+        system_prompt=(
+            "Analyze the provided information for the user's task. "
+            "If resume text is provided, compare it with the target role or webpage content "
+            "and give concrete resume improvement suggestions. Be practical and specific. "
+            "Do not claim the user already has skills or experience that are not in the resume. "
+            "Separate truthful rewrites from recommended additions."
+        ),
+        user_prompt=f"Task: {context['task']}\n\nInformation:\n{content[:12000]}{resume_context}",
         max_tokens=1400,
     )
 
 
 def report_write_tool(tool_input: Any, context: dict) -> str:
+    observations = list(context["observations"])
+    if context.get("resume_text"):
+        observations.append(
+            {
+                "step_id": "resume",
+                "goal": "User resume context",
+                "tool": "resume.context",
+                "observation": context["resume_text"][:8000],
+            }
+        )
+
     if is_deepseek_configured():
-        markdown = generate_final_report_from_observations(context["task"], context["observations"])
+        markdown = generate_final_report_from_observations(context["task"], observations)
     else:
-        markdown = build_fallback_report(context["task"], context["observations"])
+        markdown = build_fallback_report(context["task"], observations)
 
     report_path = save_ai_report(context["task"], markdown)
     context["final_report_path"] = str(report_path)
     context["final_answer"] = markdown
+
+    if context.get("resume_output") and context.get("resume_text"):
+        resume_output_path = write_resume_draft(context, observations)
+        context["resume_output_path"] = str(resume_output_path)
+
     return str(report_path)
 
 
@@ -112,3 +142,29 @@ def build_fallback_report(task: str, observations: list[dict]) -> str:
             ]
         )
     return "\n".join(lines)
+
+
+def build_resume_context(context: dict) -> str:
+    resume_text = context.get("resume_text")
+    if not resume_text:
+        return ""
+
+    return f"\n\nResume text:\n{resume_text[:8000]}"
+
+
+def write_resume_draft(context: dict, observations: list[dict]) -> Path:
+    output_path = Path(context["resume_output"]).expanduser().resolve()
+    original_path = Path(context["resume_file"]).expanduser().resolve()
+
+    if output_path == original_path:
+        raise ValueError("resume output path must be different from the original resume file.")
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if is_deepseek_configured():
+        markdown = generate_resume_draft(context["task"], context["resume_text"], observations)
+    else:
+        markdown = context["resume_text"]
+
+    output_path.write_text(markdown + "\n", encoding="utf-8")
+    return output_path

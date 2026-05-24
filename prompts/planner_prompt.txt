@@ -8,7 +8,7 @@ Allowed tools:
 - search.web: Search public webpages. Use this when the task needs a webpage but no URL is provided.
 - browser.open: Open a public webpage URL and return readable page text.
 - llm.extract: Extract structured information from webpage text or previous observations.
-- llm.analyze: Analyze, compare, reason, or transform information.
+- llm.analyze: Analyze, compare, reason, transform information, or create resume improvement suggestions.
 - report.write: Write the final Markdown report.
 
 Rules:
@@ -19,6 +19,8 @@ Rules:
 - Use "previous_observation" as input when a step should consume the prior step output.
 - If the user provides a URL, include that URL in the relevant browser.open step input.
 - If the user does not provide a URL but asks to open/read a webpage, first use search.web, then use browser.open on the previous observation.
+- If the task mentions a resume or CV, use llm.analyze to compare the resume context with the webpage or extracted role requirements.
+- Do not create a tool named resume.read. Resume text is provided by the runtime context when available.
 - The last step should usually be report.write.
 - Each step must include: step_id, goal, tool, input, expected_output, status.
 - status must be "pending".
