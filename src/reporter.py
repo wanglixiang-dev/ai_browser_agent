@@ -29,11 +29,11 @@ def save_ai_report(topic: str, markdown: str) -> Path:
 def build_markdown(topic: str, pages: list[dict]) -> str:
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     lines = [
-        f"# 调研报告：{topic}",
+        f"# Research Report: {topic}",
         "",
-        f"生成时间：{created_at}",
+        f"Generated at: {created_at}",
         "",
-        "## 关键发现",
+        "## Key Findings",
         "",
     ]
 
@@ -45,32 +45,32 @@ def build_markdown(topic: str, pages: list[dict]) -> str:
         for point in key_points[:10]:
             lines.append(f"- {point}")
     else:
-        lines.append("- 暂未提取到明确关键发现。")
+        lines.append("- No clear key findings were extracted.")
 
-    lines.extend(["", "## 信息来源", ""])
+    lines.extend(["", "## Sources", ""])
     for index, page in enumerate(pages, start=1):
         lines.append(f"{index}. [{page['title']}]({page['url']})")
 
-    lines.extend(["", "## 网页摘要", ""])
+    lines.extend(["", "## Webpage Summaries", ""])
     for index, page in enumerate(pages, start=1):
         lines.extend(
             [
                 f"### {index}. {page['title']}",
                 "",
-                f"来源：{page['url']}",
+                f"Source: {page['url']}",
                 "",
-                page.get("summary") or "未能生成摘要。",
+                page.get("summary") or "No summary was generated.",
                 "",
             ]
         )
 
     lines.extend(
         [
-            "## 后续可继续调研的问题",
+            "## Follow-up Research Questions",
             "",
-            f"- {topic} 相关战略最近一年有哪些变化？",
-            f"- {topic} 背后的核心产品、技术和合作伙伴是什么？",
-            f"- {topic} 对行业竞争格局可能产生什么影响？",
+            f"- How has the strategy related to {topic} changed over the past year?",
+            f"- What are the core products, technologies, and partners behind {topic}?",
+            f"- What impact could {topic} have on the competitive landscape?",
             "",
         ]
     )

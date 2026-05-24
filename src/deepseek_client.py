@@ -19,7 +19,7 @@ def generate_ai_report(topic: str, pages: list[dict]) -> str:
 
     api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key:
-        raise RuntimeError("缺少 DEEPSEEK_API_KEY，请先在 .env 中配置。")
+        raise RuntimeError("DEEPSEEK_API_KEY is missing. Please configure it in .env first.")
 
     client = OpenAI(api_key=api_key, base_url=DEEPSEEK_BASE_URL)
     model = os.getenv("DEEPSEEK_MODEL", DEFAULT_MODEL)
@@ -30,9 +30,9 @@ def generate_ai_report(topic: str, pages: list[dict]) -> str:
             {
                 "role": "system",
                 "content": (
-                    "你是一个严谨的中文研究助手。"
-                    "请只基于用户提供的网页资料写报告，不要编造来源。"
-                    "输出必须是 Markdown。"
+                    "You are a rigorous English-language research assistant. "
+                    "Write the report only from the webpages provided by the user. "
+                    "Do not invent sources. Output must be Markdown."
                 ),
             },
             {
@@ -55,10 +55,10 @@ def build_prompt(topic: str, pages: list[dict]) -> str:
         source_blocks.append(
             "\n".join(
                 [
-                    f"资料 {index}",
-                    f"标题：{page['title']}",
-                    f"链接：{page['url']}",
-                    "正文节选：",
+                    f"Source {index}",
+                    f"Title: {page['title']}",
+                    f"URL: {page['url']}",
+                    "Text excerpt:",
                     page.get("text", "")[:5000],
                 ]
             )
@@ -66,21 +66,21 @@ def build_prompt(topic: str, pages: list[dict]) -> str:
 
     return "\n\n".join(
         [
-            f"调研主题：{topic}",
-            "请生成一份结构清晰的中文 Markdown 调研报告。",
-            "报告结构：",
-            "1. 标题",
-            "2. 执行摘要",
-            "3. 关键发现",
-            "4. 详细分析",
-            "5. 信息来源",
-            "6. 后续可继续调研的问题",
-            "要求：",
-            "- 关键发现要具体，不要空泛。",
-            "- 信息来源必须列出标题和链接。",
-            "- 如果资料不足，要明确说明不确定性。",
+            f"Research topic: {topic}",
+            "Generate a clear English Markdown research report.",
+            "Report structure:",
+            "1. Title",
+            "2. Executive Summary",
+            "3. Key Findings",
+            "4. Detailed Analysis",
+            "5. Sources",
+            "6. Follow-up Research Questions",
+            "Requirements:",
+            "- Make the key findings specific and concrete.",
+            "- List each source with its title and URL.",
+            "- Clearly state uncertainty when the provided material is insufficient.",
             "",
-            "网页资料：",
+            "Webpage material:",
             "\n\n---\n\n".join(source_blocks),
         ]
     )

@@ -1,26 +1,26 @@
 # AI Browser Agent
 
-一个适合新手学习的最小可行版本：用户输入调研主题，程序自动搜索公开网页，读取网页内容，提取基础信息，并生成 Markdown 调研报告。
+A beginner-friendly MVP: enter a research topic, search public webpages, read page content, extract basic information, and generate a Markdown research report.
 
-## 当前 MVP 能力
+## Current MVP Features
 
-- 接收一个调研任务
-- 搜索 3-5 个公开网页
-- 抓取网页正文
-- 如果配置了 DeepSeek API Key，使用 DeepSeek 生成 Markdown 调研报告
-- 如果没有配置 DeepSeek API Key，自动退回基础规则摘要
-- 生成 Markdown 报告到 `reports/`
+- Accept a research topic from the command line
+- Search 3-5 public webpages
+- Fetch readable webpage text
+- Use DeepSeek to generate a Markdown research report when an API key is configured
+- Fall back to a simple rule-based report when no DeepSeek API key is configured
+- Save generated reports to `reports/`
 
-## 不做的事情
+## Safety Boundaries
 
-- 不登录网站
-- 不提交表单
-- 不支付、下单或执行危险操作
-- 不绕过网站权限限制
+- No website login
+- No form submission
+- No payment, ordering, or other risky actions
+- No bypassing website access restrictions
 
-## 安装
+## Installation
 
-建议使用 Python 3.10 或更高版本。
+Python 3.10 or later is recommended.
 
 ```bash
 python3 -m venv .venv
@@ -28,32 +28,32 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 配置 DeepSeek
+## Configure DeepSeek
 
-复制环境变量示例文件：
+Copy the environment variable example file:
 
 ```bash
 cp .env.example .env
 ```
 
-然后打开 `.env`，填入你自己的 DeepSeek API Key：
+Then open `.env` and add your own DeepSeek API key:
 
 ```text
 DEEPSEEK_API_KEY=your_deepseek_api_key_here
 DEEPSEEK_MODEL=deepseek-v4-flash
 ```
 
-`deepseek-v4-flash` 更适合新手阶段，速度快、成本低。如果后续想要更强效果，可以改成 `deepseek-v4-pro`。
+`deepseek-v4-flash` is a good default for the beginner stage because it is faster and cheaper. For stronger output quality, change it to `deepseek-v4-pro`.
 
-## 运行
+## Run
 
 ```bash
-python src/main.py "调研 apple 的 ai 战略"
+python src/main.py "research Apple's AI strategy"
 ```
 
-运行完成后，在 `reports/` 文件夹里查看生成的 `.md` 报告。
+After the command finishes, check the generated `.md` report in the `reports/` folder.
 
-## 项目结构
+## Project Structure
 
 ```text
 browser_agent/
@@ -71,10 +71,10 @@ browser_agent/
     └── reporter.py
 ```
 
-## 下一阶段可以做什么
+## Possible Next Steps
 
-- 增加网页内容去重
-- 增加引用编号
-- 支持指定搜索结果数量
-- 支持更多搜索结果
-- 做一个简单网页界面
+- Add webpage content deduplication
+- Add numbered citations
+- Support a configurable search result count
+- Support more search results
+- Build a simple web UI
